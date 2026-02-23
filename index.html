@@ -442,9 +442,14 @@
         }
 
         playButton.addEventListener('click', () => {
-            startScreen.style.display = 'none';
-            runSlides();
-        });
+    // 1. iPhoneのために、ボタンを押した瞬間に空の声を鳴らして「許可」を得る
+    const silentUttr = new SpeechSynthesisUtterance("");
+    window.speechSynthesis.speak(silentUttr);
+
+    // 2. 画面を隠してスライドを開始
+    startScreen.style.display = 'none';
+    runSlides();
+});
     </script>
 </body>
 </html>
