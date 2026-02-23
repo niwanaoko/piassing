@@ -218,28 +218,38 @@
             </div>
         </div>
 
-        <!-- スライド3: 内服薬 -->
-        <div class="slide" data-duration="10000" data-text="処方された内服薬を1日3回、毎食後に、5日間、飲み切ってください。なお、抗生物質を飲んで、体調が悪くなったことがある方は必ずスタッフに相談してください。">
+        　<!-- スライド3: 内服薬 -->
+        <div class="slide" data-duration="10000" data-text="処方された内服薬を1日3回、毎食後に、5日間、飲み切ってください。<br>なお、抗生物質を飲んで、体調が悪くなったことがある方は必ずスタッフに相談してください。">
             <div class="card">
                 <div class="slide-label">
                     <span class="slide-label-text">内服薬について</span>
                 </div>
                 <div class="content-main">
                     <p class="text-xl text-slate-400 mb-4 font-bold">内服薬をお渡しします</p>
-                    <div class="bg-emerald-50/50 rounded-3xl p-10 border border-emerald-100 text-center">
-                        <div class="text-6xl font-black text-emerald-800 mb-4">1日 3回 × 5日間</div>
-                        <p class="text-xl font-bold text-slate-600">毎食後、最後まで飲み切ってください</p>
+
+                    <!-- 緑の囲いの中にテキストと画像を横並びで配置 -->
+                    <div class="bg-emerald-50/50 rounded-3xl p-10 border border-emerald-100 flex items-center justify-between">
+                        <div class="text-left">
+                            <div class="text-6xl font-black text-emerald-800 mb-4">1日 3回 × 5日間</div>
+                            <p class="text-xl font-bold text-slate-600">毎食後、最後まで飲み切ってください</p>
+                        </div>
+                        <div class="ml-6">
+                            <img src="medication.png" alt="内服薬を飲むイラスト" class="w-32 h-auto rounded-lg shadow-md">
+                        </div>
                     </div>
 
-                    <!-- イラストの追加 --> <div class="mt-6 flex justify-center"> <img src="medication.png" alt="内服薬を飲むイラスト" class="max-w-xs rounded-lg shadow-md"> </div>
-                    
-                    <div class="mt-8 flex items-center gap-3 text-rose-500 font-bold bg-rose-50 p-4 rounded-xl">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 17c-.77 1.333.192 3 1.732 3z"/></svg>
-                        抗生物質に副作用のある方は、必ずお申し出ください
+                    <!-- 注意書きをセンター揃えに変更 -->
+                    <div class="mt-8 flex justify-center">
+                        <div class="text-rose-500 font-bold bg-rose-50 p-4 rounded-xl text-center flex items-center gap-3">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 17c-.77 1.333.192 3 1.732 3z"/></svg>
+                            抗生物質に副作用のある方は、必ずお申し出ください
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        
 
         <!-- スライド4: 外用薬 -->
         <div class="slide" data-duration="8000" data-text="お渡しする外用薬は、毎日お風呂上がりに、4週間継続して使用してください。">
