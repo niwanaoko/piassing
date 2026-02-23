@@ -363,25 +363,47 @@
         let currentSlideIndex = 0;
 
         async function speak(text) {
-            return new Promise(resolve => {
-                // 字幕を表示
-                subtitleArea.innerText = text;
-                subtitleArea.classList.add('visible');
+    return new Promise(resolve => {
+        // 1. 字幕を表示
+        subtitleArea.innerText = text;
+        subtitleArea.classList.add('visible');
 
-                // 音声合成の準備
-                window.speechSynthesis.cancel(); // 前の音声を止める
-                const uttr = new SpeechSynthesisUtterance(text);
-                uttr.lang = "ja-JP";
-                uttr.rate = 1.1; 
+        // 2. 読み上げ用テキストの作成
+        let voiceText = text
+            .replace(/5日間/g, "いつかかん")
+            .replace(/1日/g, "いちにち")
+            .replace(/ボディソープ/g, "ボディーソープ")
+            .replace(/4週間/g, "よんしゅうかん")
+            .replace(/6週間/g, "ろくしゅうかん")
+            .replace(/綿棒/g, "めんぼう")
+            .replace(/塗布/g, "とふ");
 
-                uttr.onend = () => {
-                    subtitleArea.classList.remove('visible');
-                    resolve();
-                };
+        window.speechSynthesis.cancel();
+        
+        const uttr = new SpeechSynthesisUtterance(voiceText);
+        
+        const voices = window.speechSynthesis.getVoices();
+        const jpVoice = voices.find(v => (v.name.includes('Google') || v.name.includes('Microsoft')) && v.lang === 'ja-JP') || 
+                        voices.find(v => v.lang === 'ja-JP');
 
-                window.speechSynthesis.speak(uttr);
-            });
+        if (jpVoice) {
+            uttr.voice = jpVoice;
         }
+
+        uttr.lang = "ja-JP";
+        
+        // ★ ここを修正しました
+        uttr.rate = 1.05;  // 0.95から1.05へ。少しだけテンポを良くしました
+        uttr.pitch = 1.25; // 1.1から1.25へ。声を高くして明るい印象にしました
+
+        uttr.onend = () => {
+            subtitleArea.classList.remove('visible');
+            resolve();
+        };
+
+        window.speechSynthesis.speak(uttr);
+    });
+}
 
         async function runSlides() {
             if (currentSlideIndex >= slides.length) {
