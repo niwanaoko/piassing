@@ -294,7 +294,6 @@
 
         <!-- スライド6: 毎日のお手入れ（薬の塗り方編） -->
         <div class="slide" data-duration="12000" data-text="お風呂上がりに、タオルでやさしくピアスホールの水気をふいて、綿棒にぬり薬を少しとり、耳のまえ側とうしろ側、両方のピアスホールに薬を塗って、ピアスをゆっくり前後に動かして、薬をなじませてください。">
-            data-voice="お風呂上がりに、タオルでやさしくピアスホールの水気をふいて、綿棒にぬり薬を少しとり、耳のまえ側とうしろ側、両方のピアスホールに薬を塗って、ピアスをゆっくり前後に動かして、薬をなじませてください。">
             <div class="card">
                 <div class="slide-label">
                     <span class="slide-label-text">毎日のお手入れ（薬の塗り方編）</span>
@@ -363,92 +362,65 @@
         const playButton = document.getElementById('play-button');
         let currentSlideIndex = 0;
 
-        <script>
-    const apiKey = ""; 
-    const slides = document.querySelectorAll('.slide');
-    const progressFill = document.getElementById('progress-fill');
-    const subtitleArea = document.getElementById('subtitle-area');
-    const startScreen = document.getElementById('start-screen');
-    const playButton = document.getElementById('play-button');
-    let currentSlideIndex = 0;
+        async function speak(text) {
+            return new Promise(resolve => {
+                // 字幕を表示
+                subtitleArea.innerText = text;
+                subtitleArea.classList.add('visible');
 
-    // 1. speak関数を「字幕用」と「音声用」の2つの引数を受け取るように変更
-    async function speak(displayText, voiceText) {
-        return new Promise(resolve => {
-            // 字幕には漢字（displayText）を表示
-            subtitleArea.innerText = displayText;
-            subtitleArea.classList.add('visible');
+                // 音声合成の準備
+                window.speechSynthesis.cancel(); // 前の音声を止める
+                const uttr = new SpeechSynthesisUtterance(text);
+                uttr.lang = "ja-JP";
+                uttr.rate = 1.1; 
 
-            window.speechSynthesis.cancel();
-            // 音声にはひらがな（voiceText）を使用
-            const uttr = new SpeechSynthesisUtterance(voiceText);
-            
-            const voices = window.speechSynthesis.getVoices();
-            const jpVoice = voices.find(v => (v.name.includes('Google') || v.name.includes('Microsoft')) && v.lang === 'ja-JP') || 
-                            voices.find(v => v.lang === 'ja-JP');
+                uttr.onend = () => {
+                    subtitleArea.classList.remove('visible');
+                    resolve();
+                };
 
-            if (jpVoice) {
-                uttr.voice = jpVoice;
-            }
-
-            uttr.lang = "ja-JP";
-            uttr.rate = 0.95; 
-            uttr.pitch = 1.1; 
-
-            uttr.onend = () => {
-                subtitleArea.classList.remove('visible');
-                resolve();
-            };
-
-            window.speechSynthesis.speak(uttr);
-        });
-    }
-
-    window.speechSynthesis.onvoiceschanged = () => {
-        window.speechSynthesis.getVoices();
-    };
-
-    async function runSlides() {
-        if (currentSlideIndex >= slides.length) {
-            subtitleArea.classList.remove('visible');
-            startScreen.style.display = 'flex';
-            startScreen.innerHTML = '<div class="text-center p-12 bg-white rounded-[40px] shadow-xl"><h2 class="text-3xl font-black mb-4 text-emerald-900">ご視聴ありがとうございました</h2><p class="mb-10 text-slate-500 text-lg">正しいお手入れで素敵なピアスライフを！</p><button onclick="location.reload()" class="bg-emerald-600 text-white px-10 py-4 rounded-full text-lg font-bold">もう一度見る</button></div>';
-            return;
+                window.speechSynthesis.speak(uttr);
+            });
         }
 
-        slides.forEach(s => s.classList.remove('active'));
-        const currentSlide = slides[currentSlideIndex];
-        currentSlide.classList.add('active');
+        async function runSlides() {
+            if (currentSlideIndex >= slides.length) {
+                subtitleArea.classList.remove('visible');
+                startScreen.style.display = 'flex';
+                startScreen.innerHTML = '<div class="text-center p-12 bg-white rounded-[40px] shadow-xl"><h2 class="text-3xl font-black mb-4 text-emerald-900">ご視聴ありがとうございました</h2><p class="mb-10 text-slate-500 text-lg">正しいお手入れで素敵なピアスライフを！</p><button onclick="location.reload()" class="bg-emerald-600 text-white px-10 py-4 rounded-full text-lg font-bold">もう一度見る</button></div>';
+                return;
+            }
 
-        // 2. HTMLのdata属性から「字幕用」と「音声用」をそれぞれ取得
-        const displayText = currentSlide.dataset.text;
-        const voiceText = currentSlide.dataset.voice || displayText; // data-voiceがない場合は漢字を使う
+            slides.forEach(s => s.classList.remove('active'));
+            const currentSlide = slides[currentSlideIndex];
+            currentSlide.classList.add('active');
 
-        progressFill.style.transition = 'none';
-        progressFill.style.width = '0%';
-        
-        setTimeout(() => {
-            progressFill.style.transition = `width ${duration}ms linear`;
-            progressFill.style.width = '100%';
-        }, 10);
+            const duration = parseInt(currentSlide.dataset.duration);
+            const text = currentSlide.dataset.text;
 
-        const duration = parseInt(currentSlide.dataset.duration);
+            progressFill.style.transition = 'none';
+            progressFill.style.width = '0%';
+            
+            setTimeout(() => {
+                progressFill.style.transition = `width ${duration}ms linear`;
+                progressFill.style.width = '100%';
+            }, 10);
 
-        await new Promise(resolve => setTimeout(resolve, 2000));
+            // スライド切替から2秒待機してナレーション開始（重なりを避ける）
+            await new Promise(resolve => setTimeout(resolve, 2000));
 
-        // 3. 分離したテキストを関数に渡す
-        await speak(displayText, voiceText);
+            await speak(text);
 
-        setTimeout(() => {
-            currentSlideIndex++;
+            setTimeout(() => {
+                currentSlideIndex++;
+                runSlides();
+            }, 1000); 
+        }
+
+        playButton.addEventListener('click', () => {
+            startScreen.style.display = 'none';
             runSlides();
-        }, 1000); 
-    }
-
-    playButton.addEventListener('click', () => {
-        startScreen.style.display = 'none';
-        runSlides();
-    });
-</script>
+        });
+    </script>
 </body>
 </html>
