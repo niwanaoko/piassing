@@ -219,7 +219,7 @@
         </div>
 
         <!-- スライド3: 内服薬 -->
-        <div class="slide" data-duration="10000" data-text="処方された内服を1日3回、毎食後に、5日間飲み切ってください。なお、抗生物質を飲んで、体調が悪くなったことがある方は必ずスタッフに相談してください。">
+        <div class="slide" data-duration="10000" data-text="処方されたないふくやくを、いちにち3回、毎食後に、いつかかん飲み切ってください。なお、抗生物質を飲んで、体調が悪くなったことがある方は必ずスタッフに相談してください。">
             <div class="card">
                 <div class="slide-label">
                     <span class="slide-label-text">内服薬について</span>
@@ -239,7 +239,7 @@
         </div>
 
         <!-- スライド4: 外用薬 -->
-        <div class="slide" data-duration="8000" data-text="お渡しする外用薬は毎日お風呂上がりに、4週間継続して使用してください。">
+        <div class="slide" data-duration="8000" data-text="お渡しするがいようやくは、毎日、お風呂上がりに、4週間継続して使用してください。">
             <div class="card">
                 <div class="slide-label">
                     <span class="slide-label-text">外用薬について</span>
@@ -341,7 +341,7 @@
                         <div class="flex justify-center gap-8 text-rose-600 mb-4 font-bold text-2xl">
                             <span>強い痛み</span><span>・</span><span>腫れ</span><span>・</span><span>膿み</span>
                         </div>
-                        <p class="text-lg text-slate-600">我慢せず、お早めに当院へご連絡ください</p>
+                        <p class="text-lg text-slate-600">我慢せずに、早めに受診してください</p>
                     </div>
                     <p class="text-3xl font-black text-emerald-800">ご視聴ありがとうございました</p>
                 </div>
@@ -362,17 +362,29 @@
         const playButton = document.getElementById('play-button');
         let currentSlideIndex = 0;
 
+        // ★ ここから差し替え
         async function speak(text) {
             return new Promise(resolve => {
-                // 字幕を表示
+                // 字幕を表示（字幕は漢字のままでOK）
                 subtitleArea.innerText = text;
                 subtitleArea.classList.add('visible');
 
                 // 音声合成の準備
-                window.speechSynthesis.cancel(); // 前の音声を止める
+                window.speechSynthesis.cancel();
                 const uttr = new SpeechSynthesisUtterance(text);
+                
+                // 日本語のボイスを探す設定
+                const voices = window.speechSynthesis.getVoices();
+                const jpVoice = voices.find(v => (v.name.includes('Google') || v.name.includes('Microsoft')) && v.lang === 'ja-JP') || 
+                                voices.find(v => v.lang === 'ja-JP');
+
+                if (jpVoice) {
+                    uttr.voice = jpVoice;
+                }
+
                 uttr.lang = "ja-JP";
-                uttr.rate = 1.1; 
+                uttr.rate = 0.95; // 0.9〜1.0くらいが「怖さ」が消えて聞きやすいです
+                uttr.pitch = 1.1; // 少し高くすると女性スタッフらしい明るい声になります
 
                 uttr.onend = () => {
                     subtitleArea.classList.remove('visible');
@@ -382,6 +394,12 @@
                 window.speechSynthesis.speak(uttr);
             });
         }
+
+        // ブラウザに声を準備させるための命令（重要）
+        window.speechSynthesis.onvoiceschanged = () => {
+            window.speechSynthesis.getVoices();
+        };
+        // ★ ここまで差し替え
 
         async function runSlides() {
             if (currentSlideIndex >= slides.length) {
