@@ -385,7 +385,9 @@
         const uttr = new SpeechSynthesisUtterance(voiceText);
         
         const voices = window.speechSynthesis.getVoices();
-        const jpVoice = voices.find(v => (v.name.includes('Google') || v.name.includes('Microsoft')) && v.lang === 'ja-JP') || 
+        // ★ iPhone(iOS)の女性の声を優先的に探す設定
+        const jpVoice = voices.find(v => v.name === 'Kyoko') || 
+                        voices.find(v => v.name.includes('Google') && v.lang === 'ja-JP') || 
                         voices.find(v => v.lang === 'ja-JP');
 
         if (jpVoice) {
