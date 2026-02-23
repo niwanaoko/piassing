@@ -6,13 +6,14 @@
     <title>ピアッシング・アフターケア動画ガイド</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
+<style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
         
         body { 
             font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", "Meiryo", "Noto Sans JP", sans-serif;
+            /* 背景色は外部CSS(style.css)で制御するため、ここでは指定しません */
             color: #334155; 
-            overflow: hidden;
+            overflow: hidden; /* スライドショー形式なので、画面からはみ出さないよう維持します */
         }
         
         .video-canvas {
@@ -21,9 +22,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            /* 背景は外部CSS(style.css)の流線型模様を適用するため削除しました */
             position: relative;
         }
 
+        /* 背景装飾：既存の円形デコレーション（お好みで残しておきます） */
         .bg-deco {
             position: absolute;
             width: 800px;
@@ -61,6 +64,7 @@
             position: relative;
         }
 
+        /* スライドタイトルの右上配置 */
         .slide-label {
             position: absolute;
             top: 2rem;
@@ -80,6 +84,7 @@
             color: #065f46;
         }
 
+        /* 中央の図解エリア */
         .content-main {
             flex: 1;
             display: flex;
@@ -104,6 +109,7 @@
             transition: width linear;
         }
 
+        /* 字幕エリア：最下部固定 */
         .subtitle-area {
             position: absolute;
             bottom: 0;
@@ -124,222 +130,297 @@
         }
 
         .subtitle-area.visible { opacity: 1; }
-        .btn-primary { background: #059669; box-shadow: 0 4px 14px rgba(5, 150, 105, 0.2); }
+
+        .icon-soft { color: #10b981; opacity: 0.8; }
+        
+        /* 開始画面 */
+        #start-screen {
+            background: #f8fafc;
+            z-index: 100;
+        }
+
+        .btn-primary {
+            background: #059669;
+            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.2);
+        }
     </style>
 </head>
 <body>
 
-<div id="start-screen" class="fixed inset-0 flex items-center justify-center bg-[#f8fafc] z-[100]">
+　<div id="start-screen" class="fixed inset-0 flex items-center justify-center">
     <div class="text-center p-12 max-w-lg">
+        
         <div class="w-48 h-48 mx-auto mb-8 rounded-full overflow-hidden border-4 border-emerald-100 shadow-sm flex items-center justify-center bg-white">
             <img src="face.png" alt="横顔" class="w-full h-full object-cover">
         </div>
+
         <h1 class="text-3xl font-black mb-4 text-slate-800">ピアッシング後の<br>お手入れガイド</h1>
+        
         <p class="mb-10 text-slate-500 text-lg leading-relaxed">正しくケアを続けることで、<br>きれいなピアスホールが完成します。</p>
+        
         <button id="play-button" class="btn-primary text-white px-12 py-5 rounded-full text-xl font-bold transition-all transform hover:scale-105 active:scale-95 flex items-center gap-3 mx-auto">
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
             動画を再生する
         </button>
+        
     </div>
 </div>
 
-<div class="video-canvas">
-    <div class="bg-deco" style="top: -200px; right: -200px;"></div>
-    <div id="subtitle-area" class="subtitle-area"></div>
+    <div class="video-canvas">
+        <div class="bg-deco" style="top: -200px; right: -200px;"></div>
+        <div id="subtitle-area" class="subtitle-area"></div>
 
-    <div class="slide active" data-duration="7000" 
-         data-text="今から、ピアスホールを安定させるための大切なケアについてご説明します。" 
-         data-voice="いまから、ピアスホールを、あんてい・させるための、たいせつなケアについて、ごせつめいします。">
-        <div class="card">
-            <div class="slide-label"><span class="slide-label-text">お手入れガイド</span></div>
-            <div class="content-main items-center text-center">
-                <div class="mb-8">
-                    <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/>
-                    </svg>
+        <!-- スライド1: はじめに -->
+        <div class="slide active" data-duration="7000" data-text="今から、ピアスホールを安定させるための大切なケアについてご説明します。">
+            <div class="card">
+                <div class="slide-label">
+                    <span class="slide-label-text">お手入れガイド</span>
                 </div>
-                <h2 class="text-4xl font-black text-slate-800 mb-4">正しいアフターケア</h2>
-                <p class="text-xl text-slate-500 font-medium">トラブルを防ぐために大切なことをお伝えします</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="slide" data-duration="8000" 
-         data-text="当日の注意点です。ピアスを開けた当日は、ピアスホールを刺激しないように、パーマやプールは控えてください。" 
-         data-voice="とうじつの、ちゅういてんです。ピアスをあけた、とうじつは、ピアスホールを、しげきしないように、パーマや、プールは、ひかえてください。">
-        <div class="card">
-            <div class="slide-label"><span class="slide-label-text">当日の注意点は？</span></div>
-            <div class="content-main items-center text-center">
-                <div class="mb-8 max-w-2xl mx-auto rounded-3xl overflow-hidden border border-slate-100 shadow-sm bg-white p-4">
-                    <img src="NG.png" alt="パーマとプールは禁止" class="w-full h-auto object-contain">
-                </div>
-                <div class="flex justify-center gap-12 mt-4">
-                    <p class="text-3xl font-black text-slate-700">パーマ</p>
-                    <p class="text-3xl font-black text-slate-700">プール</p>
-                </div>
-                <div class="mt-8">
-                    <span class="inline-block px-10 py-4 bg-rose-50 text-rose-600 rounded-full font-black text-2xl border border-rose-100 shadow-sm">当日はお控えください</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="slide" data-duration="10000" 
-         data-text="処方された内服薬を、1日3回、毎食後に、5日間飲み切ってください。" 
-         data-voice="しょほうされた、ないふく・やくを、いちにち さんかい。まいしょくごに、ごにちかん、のみきってください。">
-        <div class="card">
-            <div class="slide-label"><span class="slide-label-text">内服薬について</span></div>
-            <div class="content-main">
-                <p class="text-xl text-slate-400 mb-4 font-bold">内服薬をお渡しします</p>
-                <div class="bg-emerald-50/50 rounded-3xl p-10 border border-emerald-100 text-center">
-                    <div class="text-6xl font-black text-emerald-800 mb-4">1日 3回 × 5日間</div>
-                    <p class="text-xl font-bold text-slate-600">毎食後、最後まで飲み切ってください</p>
-                </div>
-                <div class="mt-8 flex items-center gap-3 text-rose-500 font-bold bg-rose-50 p-4 rounded-xl">
-                    抗生物質に副作用のある方は、必ずお申し出ください
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="slide" data-duration="8000" 
-         data-text="お渡しする外用薬は、毎日、お風呂上がりに、4週間継続して使用してください。" 
-         data-voice="おわたしする、がいよう・やくは、まいにち、おふろあがりに、よんしゅうかん、けいぞくして、つかってください。">
-        <div class="card">
-            <div class="slide-label"><span class="slide-label-text">外用薬について</span></div>
-            <div class="content-main text-center">
-                <div class="flex items-center justify-between bg-slate-50 p-12 rounded-3xl border border-slate-100">
-                    <div class="text-left">
-                        <h3 class="text-2xl font-bold text-slate-500 mb-2">フシジンレオ軟膏</h3>
-                        <p class="text-4xl font-black text-slate-800">入浴後に毎日塗布してください</p>
+                <div class="content-main items-center text-center">
+                    <div class="mb-8">
+                        <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 8v8M8 12h8"/>
+                        </svg>
                     </div>
-                    <div class="w-32 h-32"><img src="ointment.png" alt="外用薬" class="object-contain"></div>
+                    <h2 class="text-4xl font-black text-slate-800 mb-4">正しいアフターケア</h2>
+                    <p class="text-xl text-slate-500 font-medium">トラブルを防ぐために大切なことをお伝えします</p>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="slide" data-duration="11000" 
-         data-text="シャワーの際は、ピアスを前後に動かしながら、ホール内部の汚れも洗い流しましょう。" 
-         data-voice="シャワーのさいは、ピアスを、ぜんごに、うごかしながら、ホール・ないぶの、よごれも、あらいながしましょう。">
-        <div class="card">
-            <div class="slide-label"><span class="slide-label-text">毎日のお手入れ（シャワー編）</span></div>
-            <div class="content-main flex-row gap-12">
-                <div class="w-1/3 rounded-3xl overflow-hidden border border-slate-100 shadow-sm bg-white aspect-square">
-                    <img src="shower.png" class="w-full h-full object-cover">
+        <!-- スライド2: 当日の注意点は？ -->
+       <div class="slide" data-duration="8000" data-text="当日の注意点です。ピアスを開けた当日は、ピアスホールを刺激しないように、パーマやプールは控えてください。">
+            <div class="card">
+                <div class="slide-label">
+                    <span class="slide-label-text">当日の注意点は？</span>
                 </div>
+                <div class="content-main items-center text-center">
+                    <div class="mb-8 max-w-2xl mx-auto rounded-3xl overflow-hidden border border-slate-100 shadow-sm bg-white p-4">
+                        <img src="NG.png" alt="パーマとプールは禁止" class="w-full h-auto object-contain">
+                    </div>
+            
+                    <div class="flex justify-center gap-12 mt-4">
+                        <div class="text-center">
+                            <p class="text-3xl font-black text-slate-700">パーマ</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-3xl font-black text-slate-700">プール</p>
+                        </div>
+                    </div>
+            
+                    <div class="mt-8">
+                        <span class="inline-block px-10 py-4 bg-rose-50 text-rose-600 rounded-full font-black text-2xl border border-rose-100 shadow-sm">
+                    当日はお控えください
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- スライド3: 内服薬 -->
+        <div class="slide" data-duration="10000" data-text="処方された内服を1日3回、毎食後に、5日間飲み切ってください。なお、抗生物質を飲んで、体調が悪くなったことがある方は必ずスタッフに相談してください。">
+            <div class="card">
+                <div class="slide-label">
+                    <span class="slide-label-text">内服薬について</span>
+                </div>
+                <div class="content-main">
+                    <p class="text-xl text-slate-400 mb-4 font-bold">内服薬をお渡しします</p>
+                    <div class="bg-emerald-50/50 rounded-3xl p-10 border border-emerald-100 text-center">
+                        <div class="text-6xl font-black text-emerald-800 mb-4">1日 3回 × 5日間</div>
+                        <p class="text-xl font-bold text-slate-600">毎食後、最後まで飲み切ってください</p>
+                    </div>
+                    <div class="mt-8 flex items-center gap-3 text-rose-500 font-bold bg-rose-50 p-4 rounded-xl">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 17c-.77 1.333.192 3 1.732 3z"/></svg>
+                        抗生物質に副作用のある方は、必ずお申し出ください
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- スライド4: 外用薬 -->
+        <div class="slide" data-duration="8000" data-text="お渡しする外用薬は毎日お風呂上がりに、4週間継続して使用してください。">
+            <div class="card">
+                <div class="slide-label">
+                    <span class="slide-label-text">外用薬について</span>
+                </div>
+                <div class="content-main">
+                    <p class="text-xl text-slate-400 mb-4 font-bold">外用薬も処方されます</p>
+                    <div class="flex items-center justify-between bg-slate-50 p-12 rounded-3xl border border-slate-100">
+                        <div class="text-left">
+                            <h3 class="text-2xl font-bold text-slate-500 mb-2">フシジンレオ軟膏</h3>
+                            <p class="text-4xl font-black text-slate-800">入浴後に毎日塗布してください</p>
+                        </div>
+                        <div class="w-32 h-32 flex items-center justify-center">
+                            <img src="ointment.png" alt="外用薬" class="max-w-full max-h-full object-contain">
+</div>
+                    </div>
+                    <p class="mt-10 text-3xl font-bold text-center text-slate-500">
+                        期間の目安：<span class="text-slate-800 text-4xl">4週間継続</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- スライド5: シャワーでの洗浄 -->
+        <div class="slide" data-duration="11000" data-text="シャワーの際は、ボディソープをよく泡立て、耳をやさしく洗ってください。その後、泡が残らないようしっかり洗い流しましょう。そのときにピアスを前後に動かしながらシャワーをかけると、ホール内部の汚れも落ちやすくなります。">
+    <div class="card">
+        <div class="slide-label">
+            <span class="slide-label-text">毎日のお手入れ（シャワー編）</span>
+        </div>
+        <div class="content-main">
+            <div class="flex items-center gap-12">
+                <div class="w-1/3 text-center">
+                    <div class="mb-4 rounded-3xl overflow-hidden border border-slate-100 shadow-sm bg-white aspect-square flex items-center justify-center">
+                        <img src="shower.png" alt="シャワーでの洗浄" class="w-full h-full object-cover">
+                    </div>
+                    <p class="font-bold text-slate-400">シャワーで洗い流す</p>
+                </div>
+                
                 <div class="w-2/3 space-y-6">
-                    <div class="p-5 bg-emerald-50 rounded-2xl text-xl font-bold text-slate-700">泡立てた石鹸でなでるように洗う</div>
-                    <div class="p-5 bg-emerald-50 rounded-2xl text-xl font-bold text-slate-700">ピアスを動かしながら流す</div>
+                    <div class="flex items-start gap-4 p-5 bg-emerald-50 rounded-2xl">
+                        <div class="w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">1</div>
+                        <p class="text-xl font-bold text-slate-700">泡立てた石鹸で、<span class="text-emerald-700">なでるように洗う</span></p>
+                    </div>
+                    <div class="flex items-start gap-4 p-5 bg-emerald-50 rounded-2xl">
+                        <div class="w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">2</div>
+                        <p class="text-xl font-bold text-slate-700">ピアスを<span class="text-emerald-700 underline underline-offset-4">動かしながら</span>流す</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="slide" data-duration="12000" 
-         data-text="お風呂上がりに、綿棒で外用薬をピアスホールの前後に塗り、ゆっくり前後に動かしてなじませてください。" 
-         data-voice="おふろあがりに、めんぼうで、がいよう・やくを、ピアスホールの、ぜんごにぬり、ゆっくり、ぜんごにうごかして、なじませてください。">
-        <div class="card">
-            <div class="slide-label"><span class="slide-label-text">毎日のお手入れ（薬の塗り方編）</span></div>
-            <div class="content-main text-center items-center">
-                <p class="text-3xl font-black">薬を塗ってから前後させる</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="slide" data-duration="7000" 
-         data-text="ファーストピアスは、ホールが完成するまで6週間は外さないでください。" 
-         data-voice="ファースト・ピアスは、ホールが、かんせいするまで、ろく・しゅうかんは、はずさないでください。">
-        <div class="card items-center justify-center text-center">
-            <div class="text-9xl font-black text-emerald-600 mb-6">6週間</div>
-            <p class="text-3xl font-black text-slate-800">外さずに過ごしてください</p>
-        </div>
-    </div>
-
-    <div class="slide" data-duration="8000" 
-         data-text="もし赤みや痛み、腫れなどの異常を感じた場合は、早めに受診してください。" 
-         data-voice="もし、あかみや、いたみ、はれなどの、いじょうをかんじたばあいは、はやめに、じゅしんしてください。おつかれさまでした。">
-        <div class="card items-center justify-center">
-            <div class="w-full bg-rose-50 p-10 rounded-3xl text-center">
-                <p class="text-2xl text-rose-600 font-bold mb-4">強い痛み・腫れ・膿み</p>
-                <p class="text-3xl font-black text-emerald-800">ご視聴ありがとうございました</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="progress-bar-container"><div id="progress-fill" class="progress-fill"></div></div>
 </div>
 
-<script>
-    const slides = document.querySelectorAll('.slide');
-    const progressFill = document.getElementById('progress-fill');
-    const subtitleArea = document.getElementById('subtitle-area');
-    const startScreen = document.getElementById('start-screen');
-    const playButton = document.getElementById('play-button');
-    let currentSlideIndex = 0;
+        <!-- スライド6: 毎日のお手入れ（薬の塗り方編） -->
+        <div class="slide" data-duration="12000" data-text="お風呂上がりに、タオルでやさしくピアスホールの水気をふいて、綿棒に外用薬を少しとり、ピアスホールの前後に薬を塗って、ピアスをゆっくり前後に動かして、薬をなじませてください。">
+            <div class="card">
+                <div class="slide-label">
+                    <span class="slide-label-text">毎日のお手入れ（薬の塗り方編）</span>
+                </div>
+                <div class="content-main space-y-8">
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="bg-white border border-slate-200 p-8 rounded-2xl shadow-sm">
+                            <div class="text-emerald-600 font-bold mb-2">外用薬を準備</div>
+                            <p class="text-xl font-bold text-slate-700">綿棒でお薬をホールの<br>前後にのせる</p>
+                        </div>
+                        <div class="bg-white border-2 border-emerald-500 p-8 rounded-2xl shadow-sm">
+                            <div class="text-emerald-600 font-bold mb-2">外用薬を塗布</div>
+                            <p class="text-xl font-bold text-slate-800">ピアスをゆっくりと<br><span class="text-3xl font-black">前後に動かす</span></p>
+                        </div>
+                    </div>
+                    <div class="p-6 bg-slate-50 rounded-2xl text-center border border-dashed border-slate-300">
+                        <p class="text-xl font-bold text-slate-500 italic">お薬をホールの中に届けるのがポイントです</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    // 音声再生関数：字幕（漢字）と音声（ひらがな）を別々に受け取る
-    async function speak(displayText, voiceText) {
-        return new Promise(resolve => {
-            subtitleArea.innerText = displayText;
-            subtitleArea.classList.add('visible');
+        <!-- スライド7: 6週間 -->
+        <div class="slide" data-duration="7000" data-text="ファーストピアスは、ホールが完成するまで6週間は外さないでください。">
+            <div class="card items-center justify-center text-center">
+                <div class="slide-label">
+                    <span class="slide-label-text">大切なお約束</span>
+                </div>
+                <div class="content-main">
+                    <p class="text-2xl font-bold text-slate-500 mb-4">ファーストピアスは</p>
+                    <div class="text-9xl font-black text-emerald-600 tracking-tighter mb-6">6週間</div>
+                    <p class="text-3xl font-black text-slate-800">外さずに過ごしてください</p>
+                </div>
+            </div>
+        </div>
 
-            window.speechSynthesis.cancel();
-            const uttr = new SpeechSynthesisUtterance(voiceText);
-            
-            const voices = window.speechSynthesis.getVoices();
-            const jpVoice = voices.find(v => (v.name.includes('Google') || v.name.includes('Microsoft')) && v.lang === 'ja-JP') || 
-                            voices.find(v => v.lang === 'ja-JP');
+        <!-- スライド8: 受診の目安 -->
+        <div class="slide" data-duration="8000" data-text="もし赤みや痛み、腫れなどの異常を感じた場合は、早めに受診してください。お疲れ様でした。">
+            <div class="card">
+                <div class="slide-label">
+                    <span class="slide-label-text">異常を感じたら・・・</span>
+                </div>
+                <div class="content-main items-center">
+                    <div class="w-full bg-rose-50 border border-rose-100 p-10 rounded-3xl text-center mb-10">
+                        <div class="flex justify-center gap-8 text-rose-600 mb-4 font-bold text-2xl">
+                            <span>強い痛み</span><span>・</span><span>腫れ</span><span>・</span><span>膿み</span>
+                        </div>
+                        <p class="text-lg text-slate-600">我慢せず、お早めに当院へご連絡ください</p>
+                    </div>
+                    <p class="text-3xl font-black text-emerald-800">ご視聴ありがとうございました</p>
+                </div>
+            </div>
+        </div>
 
-            if (jpVoice) { uttr.voice = jpVoice; }
-            uttr.lang = "ja-JP";
-            uttr.rate = 0.95; // 少しゆっくりめに
-            uttr.pitch = 1.1; // 明るい声に
+        <div class="progress-bar-container">
+            <div id="progress-fill" class="progress-fill"></div>
+        </div>
+    </div>
 
-            uttr.onend = () => {
-                subtitleArea.classList.remove('visible');
-                resolve();
-            };
-            window.speechSynthesis.speak(uttr);
-        });
-    }
+    <script>
+        const apiKey = ""; 
+        const slides = document.querySelectorAll('.slide');
+        const progressFill = document.getElementById('progress-fill');
+        const subtitleArea = document.getElementById('subtitle-area');
+        const startScreen = document.getElementById('start-screen');
+        const playButton = document.getElementById('play-button');
+        let currentSlideIndex = 0;
 
-    async function runSlides() {
-        if (currentSlideIndex >= slides.length) {
-            startScreen.style.display = 'flex';
-            startScreen.innerHTML = '<div class="text-center p-12 bg-white rounded-[40px] shadow-xl"><h2 class="text-3xl font-black mb-4 text-emerald-900">ご視聴ありがとうございました</h2><button onclick="location.reload()" class="bg-emerald-600 text-white px-10 py-4 rounded-full font-bold">最初から見る</button></div>';
-            return;
+        async function speak(text) {
+            return new Promise(resolve => {
+                // 字幕を表示
+                subtitleArea.innerText = text;
+                subtitleArea.classList.add('visible');
+
+                // 音声合成の準備
+                window.speechSynthesis.cancel(); // 前の音声を止める
+                const uttr = new SpeechSynthesisUtterance(text);
+                uttr.lang = "ja-JP";
+                uttr.rate = 1.1; 
+
+                uttr.onend = () => {
+                    subtitleArea.classList.remove('visible');
+                    resolve();
+                };
+
+                window.speechSynthesis.speak(uttr);
+            });
         }
 
-        slides.forEach(s => s.classList.remove('active'));
-        const currentSlide = slides[currentSlideIndex];
-        currentSlide.classList.add('active');
+        async function runSlides() {
+            if (currentSlideIndex >= slides.length) {
+                subtitleArea.classList.remove('visible');
+                startScreen.style.display = 'flex';
+                startScreen.innerHTML = '<div class="text-center p-12 bg-white rounded-[40px] shadow-xl"><h2 class="text-3xl font-black mb-4 text-emerald-900">ご視聴ありがとうございました</h2><p class="mb-10 text-slate-500 text-lg">正しいお手入れで素敵なピアスライフを！</p><button onclick="location.reload()" class="bg-emerald-600 text-white px-10 py-4 rounded-full text-lg font-bold">もう一度見る</button></div>';
+                return;
+            }
 
-        const duration = parseInt(currentSlide.dataset.duration);
-        const displayText = currentSlide.dataset.text;
-        const voiceText = currentSlide.dataset.voice || displayText; // voiceがない場合はtextを使う
+            slides.forEach(s => s.classList.remove('active'));
+            const currentSlide = slides[currentSlideIndex];
+            currentSlide.classList.add('active');
 
-        progressFill.style.transition = 'none';
-        progressFill.style.width = '0%';
-        setTimeout(() => {
-            progressFill.style.transition = `width ${duration}ms linear`;
-            progressFill.style.width = '100%';
-        }, 10);
+            const duration = parseInt(currentSlide.dataset.duration);
+            const text = currentSlide.dataset.text;
 
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        await speak(displayText, voiceText);
+            progressFill.style.transition = 'none';
+            progressFill.style.width = '0%';
+            
+            setTimeout(() => {
+                progressFill.style.transition = `width ${duration}ms linear`;
+                progressFill.style.width = '100%';
+            }, 10);
 
-        setTimeout(() => {
-            currentSlideIndex++;
+            // スライド切替から2秒待機してナレーション開始（重なりを避ける）
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            await speak(text);
+
+            setTimeout(() => {
+                currentSlideIndex++;
+                runSlides();
+            }, 1000); 
+        }
+
+        playButton.addEventListener('click', () => {
+            startScreen.style.display = 'none';
             runSlides();
-        }, 1000); 
-    }
-
-    window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
-    playButton.addEventListener('click', () => {
-        startScreen.style.display = 'none';
-        runSlides();
-    });
-</script>
+        });
+    </script>
 </body>
 </html>
