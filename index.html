@@ -331,7 +331,7 @@
         </div>
 
         <!-- スライド8: 受診の目安 -->
-        <div class="slide" data-duration="8000" data-text="もし赤みや痛み、腫れなどの異常を感じた場合は、早めに受診してください。">
+        <div class="slide" data-duration="8000" data-text="もし赤みや痛み、腫れなどの異常を感じた場合は、早めに受診してください。正しいケアですてきなピアスライフをお過ごしください">
             <div class="card">
                 <div class="slide-label">
                     <span class="slide-label-text">異常を感じたら・・・</span>
@@ -371,6 +371,8 @@
         // 2. 読み上げ用テキストの作成
         let voiceText = text
             .replace(/5日間/g, "いつかかん")
+            .replace(/流し/g, "ながし")
+            .replace(/外用薬/g, "がいようやく")
             .replace(/1日/g, "いちにち")
             .replace(/ボディソープ/g, "ボディーソープ")
             .replace(/4週間/g, "よんしゅうかん")
@@ -394,7 +396,7 @@
         
         // ★ ここを修正しました
         uttr.rate = 1.05;  // 0.95から1.05へ。少しだけテンポを良くしました
-        uttr.pitch = 1.25; // 1.1から1.25へ。声を高くして明るい印象にしました
+        uttr.pitch = 1.35; // 1.1から1.35へ。声を高くして明るい印象にしました
 
         uttr.onend = () => {
             subtitleArea.classList.remove('visible');
